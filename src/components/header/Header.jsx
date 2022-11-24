@@ -1,6 +1,6 @@
-import React, {useRef, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import { Container } from "reactstrap";
-import './header.css'
+import "./header.css";
 
 const navLinks = [
     {
@@ -25,21 +25,36 @@ const navLinks = [
     },
 ];
 
-const Header = () => {
+export const Header = () => {
+    const headerRef = useRef(null);
 
-    const headerRef = useRef(null)
+    useEffect(() => {
+        window.addEventListener("scroll", () => {
+            if (
+                document.body.scrollTop > 80 ||
+                document.documentElement.scrollTop > 80
+            ) {
+                headerRef.current.classList.add("header_shrink");
+            } else {
+                headerRef.current.remove("header_shrink");
+            }
+        });
 
-    useEffect(()=>{
-window.addEventListener(scroll, ()=>{
-    if(document.body.scrollTop > 80 || document.documentElement.scrollTop > 80){
-        headerRef.current.classList.add('header_shrink')
-    } else{
-        headerRef.current.remove('header_shrink')
+        return () => {
+            window.removeEventListener("scroll");
+        };
+    }, []);
+
+    const handleClick = e=>{
+        e.preventDefault()
+        const targetAttr = e.target.getAtrribute('href')
+        const location =  document.querySelector(targetAttr).offsetTop
+
+        window.scroll({
+            left:0 ;
+            top: location  - 70 ;
+        })
     }
-})
-
-
-    },[])
     return (
         <header className="header">
             <Container>
@@ -60,7 +75,9 @@ window.addEventListener(scroll, ()=>{
                     </div>
                     <div className="nav_right d-flex align-items-center gap-4">
                         <button className="btn">Let's Talk</button>
-                        <span className="mobile_menu"><i class="ri-menu-line"></i></span>
+                        <span className="mobile_menu">
+                            <i class="ri-menu-line"></i>
+                        </span>
                     </div>
                 </div>
             </Container>
